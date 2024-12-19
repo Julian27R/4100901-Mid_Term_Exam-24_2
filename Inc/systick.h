@@ -1,4 +1,3 @@
-
 #include <stdint.h>
 
 void configure_systick_and_start(void);

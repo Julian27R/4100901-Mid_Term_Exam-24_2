@@ -1,7 +1,4 @@
-#ifndef GPIO_H
-#define GPIO_H
-
-#include <stdint.h>
+#include  <stdint.h>
 
 typedef struct {
     volatile uint32_t MEMRMP;
@@ -57,5 +54,5 @@ uint8_t button_driver_get_event(void);
 
 void configure_gpio_for_usart(void);
 
-#endif // GPIO_H
+
 

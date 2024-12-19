@@ -3,17 +3,19 @@
 #include "gpio.h"
 #include "systick.h"
 #include "uart.h"
+#include "rcc.h"
 
 #define TEMP_UNLOCK_DURATION 5000 // Duration in ms for temporary unlock
 
 typedef enum {
-    LOCKED,
-    TEMP_UNLOCK,
-    PERM_UNLOCK
+    LOCKED,   //ESTADO DE BLOQUEO 
+    TEMP_UNLOCK,  //BLOQUEO TEMPORAL
+    PERM_UNLOCK   //DESBLOQUEO PERMANENTE
 } DoorState_t;
 
-DoorState_t current_state = LOCKED;
-uint32_t unlock_timer = 0;
+//Variables Locales
+DoorState_t current_state = LOCKED; // Estado inicial: bloqueado
+uint32_t unlock_timer = 0;      // Temporizador para rastrear el desbloqueo temporal
 
 void run_state_machine(void) {
     switch (current_state) {
@@ -33,7 +35,7 @@ void run_state_machine(void) {
 }
 
 void handle_event(uint8_t event) {
-    if (event == 1) { // Single button press
+    if (event == 1) { // Pulsacion simple
         gpio_set_door_led_state(1); // Turn on door state LED
         current_state = TEMP_UNLOCK;
         unlock_timer = systick_GetTick();
@@ -51,6 +53,7 @@ void handle_event(uint8_t event) {
 }
 
 int main(void) {
+    //Inilizaciones
     configure_systick_and_start();
     configure_gpio();
     usart2_init();

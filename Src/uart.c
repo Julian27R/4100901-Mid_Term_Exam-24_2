@@ -9,7 +9,7 @@ void usart2_init(void)
 {
     configure_gpio_for_usart();
 
-    *RCC_APB1ENR1 |= RCC_APB1ENR1_USART2EN;
+    *RCC_APB1ENR1 |= RCC_APB1ENR1_USART2EN; // Habilita el reloj para USART2
 
     // TODO: Configurar UART2
 
@@ -46,4 +46,3 @@ void USART2_IRQHandler(void)
         }
     }
 }
-
