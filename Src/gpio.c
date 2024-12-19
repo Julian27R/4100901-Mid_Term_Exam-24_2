@@ -19,7 +19,7 @@
 
 // Definición de pines
 #define LED_PIN 5      // LED conectado al pin 5 de GPIOA
-#define LED1_PIN 1     // LED2 conectado al pin 1 de GPIOA
+#define LED1_PIN 4     // LED2 conectado al pin 1 de GPIOA
 #define BUTTON_PIN 13  // Botón conectado al pin 13 de GPIOC
 
 // Macros para el primer botón y LED
