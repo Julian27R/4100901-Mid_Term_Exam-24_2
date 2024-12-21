@@ -49,9 +49,9 @@ typedef struct {
 
 
 typedef enum {
-    CMD_NONE,
-    CMD_OPEN,
-    CMD_CLOSE
+    CMD_NONE = 0,   // No command
+    CMD_OPEN = 'O', // Open command
+    CMD_CLOSE = 'C' // Close command
 } command_t;
 
 void usart2_init(void);

@@ -12,6 +12,32 @@ void usart2_init(void)
     *RCC_APB1ENR1 |= RCC_APB1ENR1_USART2EN; // Habilita el reloj para USART2
 
     // TODO: Configurar UART2
+    // Set data length to 8 bits (clear M bit)
+    USART2->CR1 &= ~USART_CR1_M;
+
+    // Select 1 stop bit (clear STOP bits in CR2)
+    USART2->CR2 &= ~USART_CR2_STOP;
+
+    // Set parity control as no parity (clear PCE bit)
+    USART2->CR1 &= ~USART_CR1_PCE;
+
+    // Oversampling by 16 (clear OVER8 bit)
+    USART2->CR1 &= ~USART_CR1_OVER8;
+
+    // Set Baud rate to 9600 using APB frequency (4 MHz)
+    USART2->BRR = BAUD_9600_4MHZ;
+
+    // Enable transmission and reception
+    USART2->CR1 |= (USART_CR1_TE | USART_CR1_RE);
+
+    // Enable USART
+    USART2->CR1 |= USART_CR1_UE;
+
+    // Verify that USART is ready for transmission
+    while ((USART2->ISR & USART_ISR_TEACK) == 0);
+
+    // Verify that USART is ready for reception
+    while ((USART2->ISR & USART_ISR_REACK) == 0);
 
     // Activar interrupción de RXNE
     USART2->CR1 |= USART_CR1_RXNEIE; 

@@ -1,7 +1,7 @@
 #include "gpio.h"
 #include "rcc.h"
-
 #include "systick.h"
+#include "uart.h"
 
 #define EXTI_BASE 0x40010400          
 #define EXTI ((EXTI_t *)EXTI_BASE)    // Puntero a la estructura EXTI
@@ -18,15 +18,13 @@
 #define GPIOC ((GPIO_t *)0x48000800) // Base address of GPIOC
 
 // Definición de pines
-#define LED_PIN 5      // LED conectado al pin 5 de GPIOA
-#define LED1_PIN 4     // LED2 conectado al pin 1 de GPIOA
+#define LED_PIN 5      // LED conectado al pin 5 de GPIOA, que funcioanara como el HEARTBEAT
+#define LED1_PIN 4     // LED1 conectado al pin 4 de GPIOA, Que funcionara como el pin de la Puerta
 #define BUTTON_PIN 13  // Botón conectado al pin 13 de GPIOC
 
-// Macros para el primer botón y LED
+// Macros para el primer botón 
 #define BUTTON_IS_PRESSED()    (!(GPIOC->IDR & (1 << BUTTON_PIN)))    // Lee el estado del botón - retorna true si está presionado                                                                   // (lógica negativa debido al pull-up)
 #define BUTTON_IS_RELEASED()   (GPIOC->IDR & (1 << BUTTON_PIN))       // Lee el estado del botón - retorna true si está liberado
-#define TOGGLE_LED()           (GPIOA->ODR ^= (1 << LED_PIN))         // Conmuta el estado del LED (encendido/apagado)  
-#define TOGGLE_LED1()           (GPIOA->ODR ^= (1 << BUTTON_PIN))    // Conmuta el estado del LED1 (encendido/apagado)
 
 // Variable global para almacenar el estado de presión del botón
 volatile uint8_t button_pressed = 0;  // 0: no presionado, otro valor: presionado
@@ -120,7 +118,7 @@ void gpio_set_door_led_state(uint8_t state) {
 }
 
 void gpio_toggle_heartbeat_led(void) {
-    GPIOA->ODR ^= (1 << 5);
+    GPIOA->ODR ^= (1 << 5);  //Activar Heartbeat
 }
 
 //volatile uint8_t button_pressed = 0; // Flag to indicate button press
@@ -136,8 +134,10 @@ void detect_button_press(void)
         return; // Ignore bounces of less than 50 ms
     } else if (systick_GetTick() - b1_tick > 500) {
         button_pressed = 1; // single press
+        usart2_send_string("Single press!\r\n"); //Se enviara un mensaje por UART que diga que avise al presionar una vez.
     } else {
         button_pressed = 2; // double press
+        usart2_send_string("double press!\r\n"); //Se enviara un mensaje por UART que diga que avise al presionar dos veces.
     }
 
     b1_tick = systick_GetTick();

@@ -45,10 +45,12 @@ void handle_event(uint8_t event) {
     } else if (event == 'O') { // UART OPEN command
         gpio_set_door_led_state(1); // Turn on door state LED
         current_state = TEMP_UNLOCK;
+        usart2_send_string("DOOR OPEN!\r\n");  //Enviara un mensaje que dirá Puerta Abierta
         unlock_timer = systick_GetTick();
     } else if (event == 'C') { // UART CLOSE command
         gpio_set_door_led_state(0); // Turn off door state LED
         current_state = LOCKED;
+        usart2_send_string("DOOR CLOSE!\r\n");  //Enviara un mensaje que dirá puerta cerrada
     }
 }
 
